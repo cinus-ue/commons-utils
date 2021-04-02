@@ -137,7 +137,7 @@ public class RSAUtils {
 
     private static String readKey(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String readLine = null;
+        String readLine;
         StringBuilder sb = new StringBuilder();
         while ((readLine = br.readLine()) != null) {
             if (readLine.charAt(0) == '-') {
@@ -152,23 +152,24 @@ public class RSAUtils {
     }
 
 
-    public static void printPublicKeyInfo(PublicKey publicKey) {
+    public static String publicKeyInfo(PublicKey publicKey) {
         RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
-        System.out.println("----------RSAPublicKey----------");
-        System.out.println("Modulus.length=" + rsaPublicKey.getModulus().bitLength());
-        System.out.println("Modulus=" + rsaPublicKey.getModulus().toString());
-        System.out.println("PublicExponent.length=" + rsaPublicKey.getPublicExponent().bitLength());
-        System.out.println("PublicExponent=" + rsaPublicKey.getPublicExponent().toString());
+        StringBuilder sb = new StringBuilder("----------RSAPublicKey----------\n");
+        sb.append("Modulus.length=" + rsaPublicKey.getModulus().bitLength() + "\n");
+        sb.append("Modulus=" + rsaPublicKey.getModulus().toString() + "\n");
+        sb.append("PublicExponent.length=" + rsaPublicKey.getPublicExponent().bitLength() + "\n");
+        sb.append("PublicExponent=" + rsaPublicKey.getPublicExponent().toString() + "\n");
+        return sb.toString();
     }
 
-    public static void printPrivateKeyInfo(PrivateKey privateKey) {
+    public static String privateKeyInfo(PrivateKey privateKey) {
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) privateKey;
-        System.out.println("----------RSAPrivateKey ----------");
-        System.out.println("Modulus.length=" + rsaPrivateKey.getModulus().bitLength());
-        System.out.println("Modulus=" + rsaPrivateKey.getModulus().toString());
-        System.out.println("PrivateExponent.length=" + rsaPrivateKey.getPrivateExponent().bitLength());
-        System.out.println("PrivatecExponent=" + rsaPrivateKey.getPrivateExponent().toString());
-
+        StringBuilder sb = new StringBuilder("----------RSAPrivateKey ----------\n");
+        sb.append("Modulus.length=" + rsaPrivateKey.getModulus().bitLength() + "\n");
+        sb.append("Modulus=" + rsaPrivateKey.getModulus().toString() + "\n");
+        sb.append("PrivateExponent.length=" + rsaPrivateKey.getPrivateExponent().bitLength() + "\n");
+        sb.append("PrivatecExponent=" + rsaPrivateKey.getPrivateExponent().toString() + "\n");
+        return sb.toString();
     }
 
 
