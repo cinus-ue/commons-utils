@@ -1,9 +1,7 @@
 package com.cinus.crypto;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
 
 public class DESUtilsTest {
 
@@ -13,7 +11,7 @@ public class DESUtilsTest {
         String str = "test";
         String ciphertext = DESUtils.encrypt(str, key);
         String plaintext = DESUtils.decrypt(ciphertext, key);
-        assertEquals(str, plaintext);
+        Assert.assertEquals(str, plaintext);
     }
 
 }

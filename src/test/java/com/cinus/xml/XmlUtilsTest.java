@@ -3,12 +3,11 @@ package com.cinus.xml;
 
 import com.cinus.reflect.sample.TestObject;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class XmlUtilsTest {
     @Test
@@ -24,7 +23,7 @@ public class XmlUtilsTest {
         for (int i = 0; i < list.size(); i++) {
             TestObject object01 = list.get(i);
             TestObject object02 = testList.get(i);
-            assertEquals(object01, object02);
+            Assert.assertEquals(object01, object02);
         }
     }
 }

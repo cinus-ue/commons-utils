@@ -1,13 +1,11 @@
 package com.cinus.crypto;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
-import static org.junit.Assert.assertEquals;
-
 
 public class RSAUtilsTest {
 
@@ -22,6 +20,6 @@ public class RSAUtilsTest {
         String str = "test";
         String ciphertext = RSAUtils.encrypt(str, publicKey);
         String plaintext = RSAUtils.decrypt(ciphertext, privateKey);
-        assertEquals(str, plaintext);
+        Assert.assertEquals(str, plaintext);
     }
 }
