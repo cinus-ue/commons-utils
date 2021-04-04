@@ -83,7 +83,11 @@ public class ImageUtils {
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = _image.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
 
+    public static int[] getImageSize(File img) throws IOException {
+        BufferedImage bi = ImageIO.read(img);
+        return new int[]{bi.getWidth(), bi.getHeight()};
     }
 
 }

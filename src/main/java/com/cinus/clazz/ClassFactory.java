@@ -1,6 +1,7 @@
 package com.cinus.clazz;
 
 import com.cinus.array.ArrayUtils;
+import com.cinus.exception.UtilException;
 import com.cinus.thirdparty.Assert;
 
 public class ClassFactory<T> {
@@ -31,7 +32,7 @@ public class ClassFactory<T> {
         return this;
     }
 
-    public T newInstance() throws RuntimeException {
+    public T newInstance() {
         Assert.notNull(clazz, "[Assertion failed] - clazz is required; it must not be null");
         try {
             if (ArrayUtils.isEmpty(params)) {
@@ -44,10 +45,9 @@ public class ClassFactory<T> {
                 }
             }
             return clazz.getConstructor(types).newInstance(params);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            throw new UtilException(t);
         }
-        return null;
     }
 
 }

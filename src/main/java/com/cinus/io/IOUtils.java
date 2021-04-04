@@ -1,15 +1,15 @@
 package com.cinus.io;
 
 
-import com.cinus.thirdparty.binary.StringUtils;
 import com.cinus.charset.CharsetUtils;
+import com.cinus.exception.UtilException;
+import com.cinus.thirdparty.binary.StringUtils;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Collection;
 
-import static java.lang.String.format;
 
 public class IOUtils {
 
@@ -109,7 +109,7 @@ public class IOUtils {
         try {
             data = StringUtils.isBlank(charset) ? content.getBytes() : content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(format("Invalid charset [{}] !", charset), e);
+            throw new UtilException(String.format("Invalid charset [%s] !", charset), e);
         }
 
         return new ByteArrayInputStream(data);
@@ -139,6 +139,6 @@ public class IOUtils {
         if (content == null) {
             System.out.println(content);
         }
-        System.out.println(format(content.toString(), param));
+        System.out.println(String.format(content.toString(), param));
     }
 }

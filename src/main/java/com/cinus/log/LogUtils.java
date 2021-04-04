@@ -78,20 +78,8 @@ public class LogUtils {
         return sdf.format(new Date());
     }
 
-    private static String formatMessage(String messagePattern, Object[] argArray) {
-        int i = 0;
-        int s = 0;
-        StringBuilder sb = new StringBuilder(messagePattern.length() + 50);
-        for (int L = 0; L < argArray.length; ++L) {
-            int j = messagePattern.indexOf("{}", i);
-            if (j == -1) {
-                return sb.toString();
-            }
-            sb.append(messagePattern.substring(s, j + 2).replace("{}", argArray[L].toString()));
-            i++;
-            s = j + 2;
-        }
-        return sb.toString();
+    private static String formatMessage(String format, Object... arguments) {
+        return String.format(format, arguments);
     }
 
     private static StackTraceElement getStackTraceElement() {
