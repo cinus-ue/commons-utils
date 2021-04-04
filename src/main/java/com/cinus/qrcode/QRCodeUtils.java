@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class QRCode {
+public class QRCodeUtils {
 
     private static final int width = 300;
 
