@@ -1,6 +1,6 @@
 package com.cinus.net;
 
-
+import com.cinus.exception.UtilException;
 import com.cinus.thirdparty.binary.StringUtils;
 
 import javax.servlet.http.Cookie;
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 
 public class ServletUtils {
 
@@ -41,6 +42,9 @@ public class ServletUtils {
         return contextUrl;
     }
 
+    public static Cookie[] getCookies(HttpServletRequest request) {
+        return request == null ? null : request.getCookies();
+    }
 
     public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -84,11 +88,18 @@ public class ServletUtils {
         response.addCookie(cookie);
     }
 
-    public static void deleteCookie(HttpServletRequest request,
+    public static void removeCookie(HttpServletRequest request,
                                     HttpServletResponse response, String name, boolean all_sub_domain) {
         setCookie(request, response, name, "", 0, all_sub_domain);
     }
 
+    public static void writeCookie(HttpServletResponse response, Cookie cookie) {
+        if (response != null) {
+            response.addCookie(cookie);
+        } else {
+            throw new UtilException("cookie is null");
+        }
+    }
 
     public static int getHttpPort(HttpServletRequest request) {
         try {
