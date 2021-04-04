@@ -3,7 +3,6 @@ package com.cinus.io;
 
 import com.cinus.thirdparty.binary.StringUtils;
 import com.cinus.util.CharsetUtils;
-import com.sun.xml.internal.ws.util.UtilException;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;
@@ -110,7 +109,7 @@ public class IOUtils {
         try {
             data = StringUtils.isBlank(charset) ? content.getBytes() : content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new UtilException(format("Invalid charset [{}] !", charset), e);
+            throw new RuntimeException(format("Invalid charset [{}] !", charset), e);
         }
 
         return new ByteArrayInputStream(data);
