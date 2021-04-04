@@ -23,23 +23,23 @@ public class RuleRunner {
         InternalKnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        for ( int i = 0; i < rules.length; i++ ) {
+        for (int i = 0; i < rules.length; i++) {
             String ruleFile = rules[i];
-            System.out.println( "Loading file: " + ruleFile );
+            System.out.println("Loading file: " + ruleFile);
 //            kbuilder.add( ResourceFactory.newClassPathResource( ruleFile,
 //                    RuleRunner.class ),
 //                    ResourceType.DRL );
-            kbuilder.add(ResourceFactory.newFileResource(new File(ruleFile)),ResourceType.DRL );
+            kbuilder.add(ResourceFactory.newFileResource(new File(ruleFile)), ResourceType.DRL);
         }
 
         Collection<KiePackage> pkgs = kbuilder.getKnowledgePackages();
-        kbase.addPackages( pkgs );
+        kbase.addPackages(pkgs);
         KieSession ksession = kbase.newKieSession();
 
-        for ( int i = 0; i < facts.length; i++ ) {
+        for (int i = 0; i < facts.length; i++) {
             Object fact = facts[i];
-            System.out.println( "Inserting fact: " + fact );
-            ksession.insert( fact );
+            System.out.println("Inserting fact: " + fact);
+            ksession.insert(fact);
         }
 
         ksession.fireAllRules();

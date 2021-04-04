@@ -3,6 +3,7 @@ package com.cinus.rule;
 public class Weather {
     private boolean rain;
     private String message;
+
     public boolean isRain() {
         return rain;
     }
