@@ -17,9 +17,7 @@ public class RSAUtilsTest {
         PrivateKey privateKey = keyPair.getPrivate();
         PublicKey publicKey = keyPair.getPublic();
 
-        String str = "test";
-        String ciphertext = RSAUtils.encrypt(str, publicKey);
-        String plaintext = RSAUtils.decrypt(ciphertext, privateKey);
-        Assert.assertEquals(str, plaintext);
+        String data = "encrypt";
+        Assert.assertEquals(data, RSAUtils.decrypt(RSAUtils.encrypt(data, publicKey), privateKey));
     }
 }

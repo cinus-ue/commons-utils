@@ -2,6 +2,7 @@ package com.cinus.crypto;
 
 
 import com.cinus.thirdparty.binary.Hex;
+import com.cinus.thirdparty.binary.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -14,7 +15,8 @@ import java.util.Arrays;
 
 public class DESUtils {
 
-    private static final String ALGO_DES = "DES/CBC/PKCS5Padding";
+    public static final String DEFAULT_DES_ALGORITHM = "DES/CBC/PKCS5Padding";
+    private static final int IV_LENGTH = 8;
 
     private static SecretKeySpec generateKey(String password) throws Exception {
         KeyGenerator kg = KeyGenerator.getInstance("DES");
@@ -24,42 +26,48 @@ public class DESUtils {
     }
 
     public static String encrypt(String data, String password) throws Exception {
-        if (data == null) {
+        if (StringUtils.isEmpty(data)) {
             return null;
         }
-        return Hex.encodeHexString(encrypt(generateKey(password), data.getBytes()));
+        return Hex.encodeHexString(encrypt(generateKey(password), data.getBytes(), DEFAULT_DES_ALGORITHM));
     }
 
 
     public static String decrypt(String data, String password) throws Exception {
-        if (data == null) {
+        if (StringUtils.isEmpty(data)) {
             return null;
         }
-        return new String(decrypt(generateKey(password), Hex.decodeHex(data.toCharArray())));
+        return new String(decrypt(generateKey(password), Hex.decodeHex(data.toCharArray()), DEFAULT_DES_ALGORITHM));
     }
 
 
-    private static byte[] encrypt(SecretKeySpec key, byte[] data) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGO_DES);
-        byte[] iv = cipher.getParameters().getParameterSpec(IvParameterSpec.class).getIV();
-        iv = Arrays.copyOfRange(iv, 0, 8);
+    private static byte[] encrypt(SecretKeySpec key, byte[] data, String algorithm) throws Exception {
+        Cipher cipher = Cipher.getInstance(algorithm);
+        byte[] iv = randIV();
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
         byte[] ciphertext = cipher.doFinal(data);
-        byte[] ret = new byte[ciphertext.length + iv.length];
-        System.arraycopy(ciphertext, 0, ret, 0, ciphertext.length);
-        System.arraycopy(iv, 0, ret, ciphertext.length, iv.length);
-        return ret;
+        byte[] bytes = new byte[ciphertext.length + iv.length];
+        System.arraycopy(ciphertext, 0, bytes, 0, ciphertext.length);
+        System.arraycopy(iv, 0, bytes, ciphertext.length, iv.length);
+        return bytes;
     }
 
 
-    private static byte[] decrypt(SecretKeySpec key, byte[] data) throws Exception {
-        byte[] iv = Arrays.copyOfRange(data, data.length - 8, data.length);
-        byte[] ciphertext = Arrays.copyOfRange(data, 0, data.length - 8);
-        Cipher cipher = Cipher.getInstance(ALGO_DES);
+    private static byte[] decrypt(SecretKeySpec key, byte[] data, String algorithm) throws Exception {
+        byte[] iv = Arrays.copyOfRange(data, data.length - IV_LENGTH, data.length);
+        byte[] ciphertext = Arrays.copyOfRange(data, 0, data.length - IV_LENGTH);
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         return cipher.doFinal(ciphertext);
     }
 
+
+    private static byte[] randIV() {
+        SecureRandom rand = new SecureRandom();
+        byte[] iv = new byte[IV_LENGTH];
+        rand.nextBytes(iv);
+        return iv;
+    }
 
 }
 
