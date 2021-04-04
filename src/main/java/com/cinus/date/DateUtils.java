@@ -1,6 +1,8 @@
 package com.cinus.date;
 
 
+import com.cinus.thirdparty.Constants;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +74,6 @@ public class DateUtils {
         return new Date(date);
     }
 
-
     public static String yearAndSeason(Date date) {
         final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -95,6 +96,9 @@ public class DateUtils {
         return result;
     }
 
+    public static String getSysDate(String format) {
+        return date2String(new Date(), format);
+    }
 
     public static String getSysYear() {
         Calendar date = Calendar.getInstance();
@@ -112,6 +116,32 @@ public class DateUtils {
         Calendar date = Calendar.getInstance();
         String day = String.valueOf(date.get(Calendar.DAY_OF_MONTH));
         return day;
+    }
+
+    public static Date string2Date(String date, String format) {
+        Date d;
+        SimpleDateFormat formater = new SimpleDateFormat(format);
+        try {
+            formater.setLenient(false);// 严格解析
+            d = formater.parse(date);
+        } catch (Exception e) {
+            d = null;
+        }
+        return d;
+    }
+
+    public static String date2String(Date date, String format) {
+        if(date == null){
+            return Constants.EMPTY;
+        }
+        String s;
+        SimpleDateFormat formater = new SimpleDateFormat(format);
+        try {
+            s = formater.format(date);
+        } catch (Exception e) {
+            s = Constants.EMPTY;
+        }
+        return s;
     }
 
     public static String friendlyTime(Date time) {
