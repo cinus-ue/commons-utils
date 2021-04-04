@@ -1,4 +1,4 @@
-package com.cinus.util;
+package com.cinus.charset;
 
 import com.cinus.thirdparty.binary.StringUtils;
 

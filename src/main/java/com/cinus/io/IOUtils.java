@@ -2,7 +2,7 @@ package com.cinus.io;
 
 
 import com.cinus.thirdparty.binary.StringUtils;
-import com.cinus.util.CharsetUtils;
+import com.cinus.charset.CharsetUtils;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;
