@@ -3,6 +3,7 @@ package com.cinus.io;
 
 import com.cinus.charset.CharsetUtils;
 import com.cinus.exception.UtilException;
+import com.cinus.thirdparty.Constants;
 import com.cinus.thirdparty.binary.StringUtils;
 
 import java.io.*;
@@ -134,6 +135,43 @@ public class IOUtils {
         }
     }
 
+    public static String read(InputStream is) throws IOException {
+        return read(is, null);
+    }
+
+
+    public static String read(InputStream is, EndChecker checker) throws IOException {
+        if (is == null) return null;
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        while (br.ready()) {
+            String line = br.readLine();
+            sb.append(line).append(Constants.ENTER);
+            if (checker != null && checker.isEnd(line)) {
+                break;
+            }
+        }
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - Constants.ENTER.length(), sb.length());
+        }
+        return sb.toString();
+    }
+
+
+    public static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                throw new UtilException(e);
+            }
+        }
+    }
+
+
+    public static boolean checkFileExist(String url) {
+        return new File(url).exists();
+    }
 
     public static void echo(Object content, Object... param) {
         if (content == null) {
