@@ -1,0 +1,9 @@
+package com.cinus.drl;
+import com.cinus.rule.Weather;
+
+rule "weather rule"
+    when
+        $Weather:Weather(rain == true)
+    then
+        $Weather.setMessage("It rains, take an umbrella!");
+end
