@@ -18,4 +18,9 @@ public class RuntimeUtils {
             throw new UtilException(t);
         }
     }
+
+
+    public static void addShutdownHook(Thread hook) {
+        Runtime.getRuntime().addShutdownHook(hook);
+    }
 }
