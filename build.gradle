@@ -24,5 +24,6 @@ dependencies {
     implementation 'org.jeasy:easy-rules-core:4.1.0'
     implementation 'org.drools:drools-core:7.9.0.Final'
     implementation 'org.drools:drools-compiler:7.9.0.Final'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     testImplementation  group: 'junit', name: 'junit', version: '4.12'
 }
