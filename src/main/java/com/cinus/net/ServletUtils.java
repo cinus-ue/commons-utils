@@ -1,11 +1,11 @@
 package com.cinus.net;
 
-import com.cinus.exception.UtilException;
 import com.cinus.thirdparty.binary.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -93,12 +93,39 @@ public class ServletUtils {
         setCookie(request, response, name, "", 0, all_sub_domain);
     }
 
-    public static void writeCookie(HttpServletResponse response, Cookie cookie) {
+    public static void addCookie(HttpServletResponse response, Cookie cookie) {
         if (response != null) {
             response.addCookie(cookie);
-        } else {
-            throw new UtilException("cookie is null");
         }
+    }
+
+    public static void setRequestAttribute(HttpServletRequest request, String key, Object value) {
+        if (request != null) {
+            request.setAttribute(key, value);
+        }
+    }
+
+    public static Object getRequestAttribute(HttpServletRequest request, String key) {
+        if (request != null) {
+            return request.getAttribute(key);
+        }
+        return null;
+    }
+
+
+    public static void setSessionAttribute(HttpServletRequest request, String key, Object value) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute(key, value);
+        }
+    }
+
+    public static Object getSessionAttribute(HttpServletRequest request, String key) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            return session.getAttribute(key);
+        }
+        return null;
     }
 
     public static int getHttpPort(HttpServletRequest request) {
