@@ -5,10 +5,10 @@ import com.cinus.io.IOUtils;
 
 public class RuntimeUtils {
 
-    public static ExecResult excuteCmd(String sh) {
+    public static ExecResult excuteCmd(String command) {
         Process process;
         try {
-            process = Runtime.getRuntime().exec(sh);
+            process = Runtime.getRuntime().exec(command);
             int exitCode = process.waitFor();
             ExecResult result = new ExecResult(exitCode);
             result.setError(IOUtils.read(process.getErrorStream()));
