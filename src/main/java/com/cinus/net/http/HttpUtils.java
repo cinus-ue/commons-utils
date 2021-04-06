@@ -17,13 +17,11 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -37,6 +35,8 @@ public class HttpUtils {
     private static int timeout = 20000;
     private static Map<String, String> cookieMap = new HashMap<>();
     private static String charset = "UTF-8";
+    private static CloseableHttpClient httpClient;
+    private static CloseableHttpClient sslHttpClient;
 
 
     public static void invalidCookieMap() {
@@ -55,32 +55,19 @@ public class HttpUtils {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Cookie", convertCookieMapToString(cookieMap));
         httpGet.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
-        CloseableHttpClient httpClient = null;
         String content = Constants.EMPTY;
         try {
-            httpClient = HttpClientBuilder.create().build();
             HttpClientContext context = HttpClientContext.create();
-            CloseableHttpResponse response = httpClient.execute(httpGet, context);
+            CloseableHttpResponse response = getHttpClient().execute(httpGet, context);
             getCookiesFromCookieStore(context.getCookieStore(), cookieMap);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
             }
-            try {
-                HttpEntity entity = response.getEntity();
-                content = EntityUtils.toString(entity, charset);
-            } finally {
-                response.close();
-            }
+            HttpEntity entity = response.getEntity();
+            content = EntityUtils.toString(entity, charset);
         } catch (IOException e) {
             ExceptionUtils.throwUtilException(e);
-        } finally {
-            try {
-                if (httpClient != null)
-                    httpClient.close();
-            } catch (IOException e) {
-                ExceptionUtils.throwUtilException(e);
-            }
         }
         return content;
     }
@@ -90,34 +77,19 @@ public class HttpUtils {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Cookie", convertCookieMapToString(cookieMap));
         httpGet.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
-        CloseableHttpClient httpClient = null;
         String content = Constants.EMPTY;
         try {
-            httpClient = createSSLInsecureClient();
             HttpClientContext context = HttpClientContext.create();
-            CloseableHttpResponse response = httpClient.execute(httpGet, context);
+            CloseableHttpResponse response = getSSLInsecureClient().execute(httpGet, context);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
             }
-            try {
-                HttpEntity entity = response.getEntity();
-                content = EntityUtils.toString(entity, charset);
-                getCookiesFromCookieStore(context.getCookieStore(), cookieMap);
-            } finally {
-                response.close();
-            }
+            HttpEntity entity = response.getEntity();
+            content = EntityUtils.toString(entity, charset);
+            getCookiesFromCookieStore(context.getCookieStore(), cookieMap);
         } catch (IOException e) {
             ExceptionUtils.throwUtilException(e);
-        } catch (GeneralSecurityException ex) {
-            ExceptionUtils.throwUtilException(ex);
-        } finally {
-            try {
-                if (httpClient != null)
-                    httpClient.close();
-            } catch (IOException e) {
-                ExceptionUtils.throwUtilException(e);
-            }
         }
         return content;
     }
@@ -132,12 +104,10 @@ public class HttpUtils {
         for (Map.Entry<String, String> entry : params.entrySet()) {
             parameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        CloseableHttpResponse response;
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(parameters));
             HttpClientContext clientContext = HttpClientContext.create();
-            response = httpClient.execute(httpPost, clientContext);
+            CloseableHttpResponse response = getHttpClient().execute(httpPost, clientContext);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
@@ -147,8 +117,6 @@ public class HttpUtils {
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (IOException e) {
             ExceptionUtils.throwUtilException(e);
-        } finally {
-            httpPost.releaseConnection();
         }
         return content;
     }
@@ -156,19 +124,17 @@ public class HttpUtils {
 
     public static String executePostWithSSL(String url, Map<String, String> params) {
         String content = Constants.EMPTY;
-        HttpPost post = new HttpPost(url);
+        HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> parameters = new ArrayList<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             parameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
-        post.setHeader("Cookie", convertCookieMapToString(cookieMap));
-        post.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
-        CloseableHttpResponse response;
+        httpPost.setHeader("Cookie", convertCookieMapToString(cookieMap));
+        httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
         try {
-            CloseableHttpClient httpClientRe = createSSLInsecureClient();
             HttpClientContext clientContext = HttpClientContext.create();
-            post.setEntity(new UrlEncodedFormEntity(parameters));
-            response = httpClientRe.execute(post, clientContext);
+            httpPost.setEntity(new UrlEncodedFormEntity(parameters));
+            CloseableHttpResponse response = getSSLInsecureClient().execute(httpPost, clientContext);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
@@ -188,12 +154,10 @@ public class HttpUtils {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
         httpPost.setHeader("Cookie", convertCookieMapToString(cookieMap));
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        CloseableHttpResponse response;
         try {
             httpPost.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
             HttpClientContext clientContext = HttpClientContext.create();
-            response = httpClient.execute(httpPost, clientContext);
+            CloseableHttpResponse response = getHttpClient().execute(httpPost, clientContext);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
@@ -203,8 +167,6 @@ public class HttpUtils {
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (IOException e) {
             ExceptionUtils.throwUtilException(e);
-        } finally {
-            httpPost.releaseConnection();
         }
         return content;
     }
@@ -212,15 +174,13 @@ public class HttpUtils {
 
     public static String executePostWithJsonAndSSL(String url, String jsonBody) {
         String content = Constants.EMPTY;
-        HttpPost post = new HttpPost(url);
-        post.setHeader("Cookie", convertCookieMapToString(cookieMap));
-        post.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
-        CloseableHttpResponse response;
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setHeader("Cookie", convertCookieMapToString(cookieMap));
+        httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
         try {
-            CloseableHttpClient httpClient = createSSLInsecureClient();
             HttpClientContext clientContext = HttpClientContext.create();
-            post.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
-            response = httpClient.execute(post, clientContext);
+            httpPost.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
+            CloseableHttpResponse response = getSSLInsecureClient().execute(httpPost, clientContext);
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
@@ -254,14 +214,27 @@ public class HttpUtils {
     }
 
 
-    private static CloseableHttpClient createSSLInsecureClient() throws GeneralSecurityException {
-        try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
-            SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext,
-                    (s, sslContextL) -> true);
-            return HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
-        } catch (GeneralSecurityException e) {
-            throw e;
+    private static CloseableHttpClient getSSLInsecureClient() {
+        if (sslHttpClient != null) {
+            return sslHttpClient;
+        } else {
+            try {
+                SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
+                        new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build(), (s, sslContextL) -> true);
+                sslHttpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
+            } catch (GeneralSecurityException e) {
+                ExceptionUtils.throwUtilException(e);
+            }
         }
+        return sslHttpClient;
+    }
+
+    private static CloseableHttpClient getHttpClient() {
+        if (httpClient != null) {
+            return httpClient;
+        } else {
+            httpClient = HttpClients.createDefault();
+        }
+        return httpClient;
     }
 }
