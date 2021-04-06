@@ -27,6 +27,18 @@ public class ExceptionUtils {
     }
 
 
+    public static void throwUtilException(String message, Throwable cause) {
+        throw new UtilException(message, cause);
+    }
+
+    public static void throwUtilException(Throwable cause) {
+        throw new UtilException(cause);
+    }
+
+    public static void throwUtilException(String message) {
+        throw new UtilException(message);
+    }
+
     public static String getStackTraceAsString(Exception e) {
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));

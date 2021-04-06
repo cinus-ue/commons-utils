@@ -1,11 +1,11 @@
 package com.cinus.math;
 
+import com.cinus.thirdparty.Constants;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 
@@ -15,7 +15,7 @@ public class MathUtils {
     private static DecimalFormat df4 = new DecimalFormat("0.0000");
     private static DecimalFormat df6 = new DecimalFormat("0.000000");
 
-    private static final Random random = new Random();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final String NUMBER_STRING = "0123456789";
 
@@ -25,23 +25,23 @@ public class MathUtils {
 
 
     public static int randomInt() {
-        return random.nextInt();
+        return RANDOM.nextInt();
     }
 
     public static int randomInt(int min, int max) {
-        return random.nextInt(max - min) + min;
+        return RANDOM.nextInt(max - min) + min;
     }
 
     public static String randomCode(int size) {
-        String code = "";
+        String code = Constants.EMPTY;
         for (int i = 0; i < size; i++) {
-            code += random.nextInt(10);
+            code += RANDOM.nextInt(10);
         }
         return code;
     }
 
     public static int randomInt(int limit) {
-        return random.nextInt(limit);
+        return RANDOM.nextInt(limit);
     }
 
     public static String randomString(int length) {
@@ -59,7 +59,7 @@ public class MathUtils {
         }
         int baseLength = baseString.length();
         for (int i = 0; i < length; i++) {
-            int number = random.nextInt(baseLength);
+            int number = RANDOM.nextInt(baseLength);
             sb.append(baseString.charAt(number));
         }
         return sb.toString();

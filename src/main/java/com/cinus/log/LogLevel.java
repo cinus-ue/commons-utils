@@ -20,9 +20,6 @@ public enum LogLevel {
     }
 
     public boolean isAllow(LogLevel minLevel) {
-        if (level >= minLevel.getLevel()) {
-            return true;
-        }
-        return false;
+        return level >= minLevel.getLevel();
     }
 }

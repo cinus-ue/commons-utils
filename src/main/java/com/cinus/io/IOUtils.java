@@ -2,7 +2,7 @@ package com.cinus.io;
 
 
 import com.cinus.charset.CharsetUtils;
-import com.cinus.exception.UtilException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.Constants;
 import com.cinus.thirdparty.binary.StringUtils;
 
@@ -105,14 +105,12 @@ public class IOUtils {
         if (content == null) {
             return null;
         }
-
-        byte[] data;
+        byte[] data = null;
         try {
             data = StringUtils.isBlank(charset) ? content.getBytes() : content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new UtilException(String.format("Invalid charset [%s] !", charset), e);
+            ExceptionUtils.throwUtilException(String.format("Invalid charset [%s] !", charset), e);
         }
-
         return new ByteArrayInputStream(data);
     }
 
@@ -163,7 +161,7 @@ public class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                throw new UtilException(e);
+                ExceptionUtils.throwUtilException(e);
             }
         }
     }

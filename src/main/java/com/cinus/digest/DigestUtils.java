@@ -1,6 +1,6 @@
 package com.cinus.digest;
 
-import com.cinus.exception.UtilException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.binary.Hex;
 
 import java.security.MessageDigest;
@@ -33,8 +33,9 @@ public class DigestUtils extends com.cinus.thirdparty.digest.DigestUtils {
             byte[] digest = md.digest();
             return Hex.encodeHexString(digest);
         } catch (Exception e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         }
+        return null;
     }
 
 }

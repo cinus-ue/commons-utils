@@ -1,7 +1,7 @@
 package com.cinus.clazz;
 
 import com.cinus.array.ArrayUtils;
-import com.cinus.exception.UtilException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.Assert;
 
 public class ClassFactory<T> {
@@ -46,8 +46,9 @@ public class ClassFactory<T> {
             }
             return clazz.getConstructor(types).newInstance(params);
         } catch (Throwable t) {
-            throw new UtilException(t);
+            ExceptionUtils.throwUtilException(t);
         }
+        return null;
     }
 
 }

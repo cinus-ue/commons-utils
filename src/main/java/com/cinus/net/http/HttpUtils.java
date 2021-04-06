@@ -1,6 +1,6 @@
 package com.cinus.net.http;
 
-import com.cinus.exception.UtilException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.Constants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -73,13 +73,13 @@ public class HttpUtils {
                 response.close();
             }
         } catch (IOException e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         } finally {
             try {
                 if (httpClient != null)
                     httpClient.close();
             } catch (IOException e) {
-                throw new UtilException(e);
+                ExceptionUtils.throwUtilException(e);
             }
         }
         return content;
@@ -108,15 +108,15 @@ public class HttpUtils {
                 response.close();
             }
         } catch (IOException e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         } catch (GeneralSecurityException ex) {
-            throw new UtilException(ex);
+            ExceptionUtils.throwUtilException(ex);
         } finally {
             try {
                 if (httpClient != null)
                     httpClient.close();
             } catch (IOException e) {
-                throw new UtilException(e);
+                ExceptionUtils.throwUtilException(e);
             }
         }
         return content;
@@ -146,7 +146,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (IOException e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         } finally {
             httpPost.releaseConnection();
         }
@@ -177,7 +177,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (Exception e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         }
         return content;
     }
@@ -202,7 +202,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (IOException e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         } finally {
             httpPost.releaseConnection();
         }
@@ -229,7 +229,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(clientContext.getCookieStore(), cookieMap);
         } catch (Exception e) {
-            throw new UtilException(e);
+            ExceptionUtils.throwUtilException(e);
         }
         return content;
     }

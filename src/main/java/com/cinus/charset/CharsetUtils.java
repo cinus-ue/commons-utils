@@ -1,6 +1,6 @@
 package com.cinus.charset;
 
-import com.cinus.exception.UtilException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.binary.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -65,7 +65,8 @@ public class CharsetUtils {
         try {
             return str.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new UtilException(String.format("Charset [%s] unsupported!", charset));
+            ExceptionUtils.throwUtilException(String.format("Charset [%s] unsupported!", charset));
         }
+        return null;
     }
 }
