@@ -18,4 +18,9 @@ public class MathUtilsTest {
         Assert.assertTrue(b == 1);
     }
 
+    @Test
+    public void test_format() {
+        Assert.assertEquals("49,999,994.57", MathUtils.formatToString("49999994.568", "#,##0.00"));
+        Assert.assertEquals("0.57", MathUtils.formatToString("0.568", "#,##0.00"));
+    }
 }

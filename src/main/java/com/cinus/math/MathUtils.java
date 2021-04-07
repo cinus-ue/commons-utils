@@ -11,10 +11,6 @@ import java.util.UUID;
 
 public class MathUtils {
 
-    private static DecimalFormat df2 = new DecimalFormat("#,##0.00");
-    private static DecimalFormat df4 = new DecimalFormat("0.0000");
-    private static DecimalFormat df6 = new DecimalFormat("0.000000");
-
     private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final String NUMBER_STRING = "0123456789";
@@ -193,7 +189,7 @@ public class MathUtils {
 
     public static double div(double v1, double v2, int scale) {
         if (scale < 0) {
-            throw new IllegalArgumentException("The scale must be  a positive integer or zero");
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
         }
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
@@ -203,7 +199,7 @@ public class MathUtils {
 
     public static float div(long v1, long v2, int scale) {
         if (scale < 0) {
-            throw new IllegalArgumentException("The scale must be  a positive integer or zero");
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
         }
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
@@ -213,31 +209,31 @@ public class MathUtils {
 
     public static float div(float v1, float v2, int scale) {
         if (scale < 0) {
-            throw new IllegalArgumentException("The scale must be  a positive integer or zero");
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
         }
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
         return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
-    public static String formatToString2(BigDecimal b) {
-        return df2.format(b);
+    public static String formatToString(String number, String format) {
+        return formatToString(new BigDecimal(number), format);
     }
 
-    public static String formatToString4(BigDecimal b) {
-        return df4.format(b);
+    public static String formatToString(BigDecimal bd, String format) {
+        return new DecimalFormat(format).format(bd);
     }
 
-    public static String formatToString6(BigDecimal b) {
-        return df6.format(b);
+    public int compare(String n1, String n2) {
+        return new BigDecimal(n1).compareTo(new BigDecimal(n2));
     }
 
-    public static BigDecimal nvl(BigDecimal bigDecimal) {
-        return null == bigDecimal ? new BigDecimal("0") : bigDecimal;
+    public static BigDecimal nvl(BigDecimal bd) {
+        return null == bd ? new BigDecimal("0") : bd;
     }
 
-    public static Double nvl(Double double1) {
-        return null == double1 ? new Double("0") : double1;
+    public static Double nvl(Double d) {
+        return null == d ? new Double("0") : d;
     }
 
     public static BigDecimal add(BigDecimal bd1, BigDecimal bd2) {

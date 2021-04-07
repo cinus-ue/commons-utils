@@ -11,11 +11,11 @@ public class DroolsTest {
     public void test_drools() {
         Weather weather = new Weather();
         weather.setRain(false);
-        WeatherRule.weatherRule(weather);
+        WeatherRule.run(weather);
         Assert.assertTrue(null == weather.getMessage());
 
         weather.setRain(true);
-        WeatherRule.weatherRule(weather);
+        WeatherRule.run(weather);
         Assert.assertEquals("It rains, take an umbrella!", weather.getMessage());
     }
 }

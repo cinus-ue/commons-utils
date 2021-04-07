@@ -1,6 +1,7 @@
 package com.cinus.io;
 
 
+import com.cinus.array.ArrayUtils;
 import com.cinus.charset.CharsetUtils;
 import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.Constants;
@@ -56,7 +57,6 @@ public class IOUtils {
     public static long copy(FileInputStream in, FileOutputStream out) throws IOException {
         FileChannel inChannel = in.getChannel();
         FileChannel outChannel = out.getChannel();
-
         return inChannel.transferTo(0, inChannel.size(), outChannel);
     }
 
@@ -90,7 +90,6 @@ public class IOUtils {
         while ((line = reader.readLine()) != null) {
             collection.add(line);
         }
-
         return collection;
     }
 
@@ -105,11 +104,11 @@ public class IOUtils {
         if (content == null) {
             return null;
         }
-        byte[] data = null;
+        byte[] data;
         try {
             data = StringUtils.isBlank(charset) ? content.getBytes() : content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            ExceptionUtils.throwUtilException(String.format("Invalid charset [%s] !", charset), e);
+            throw ExceptionUtils.utilException(String.format("Invalid charset [%s] !", charset), e);
         }
         return new ByteArrayInputStream(data);
     }
@@ -161,20 +160,20 @@ public class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                ExceptionUtils.throwUtilException(e);
+                throw ExceptionUtils.utilException(e);
             }
         }
     }
 
 
-    public static boolean checkFileExist(String url) {
-        return new File(url).exists();
+    public static boolean checkFileExist(String pathname) {
+        return new File(pathname).exists();
     }
 
-    public static void echo(Object content, Object... param) {
-        if (content == null) {
+    public static void echo(Object content, Object... args) {
+        if (ArrayUtils.isEmpty(args)) {
             System.out.println(content);
         }
-        System.out.println(String.format(content.toString(), param));
+        System.out.println(String.format(content.toString(), args));
     }
 }

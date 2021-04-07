@@ -1,7 +1,8 @@
 package com.cinus.program;
 
+import com.cinus.exception.ExceptionUtils;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -24,16 +25,11 @@ public class ProgramUtils {
             if (!pidFile.createNewFile())
                 throw new IOException("Can't create the pid file: " + pidFile.getAbsolutePath());
         }
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(pidFile);
+        try (FileWriter fw = new FileWriter(pidFile)) {
             fw.write(pid);
             fw.flush();
-        } catch (FileNotFoundException e) {
-            throw e;
-        } finally {
-            if (fw != null)
-                fw.close();
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
         }
     }
 

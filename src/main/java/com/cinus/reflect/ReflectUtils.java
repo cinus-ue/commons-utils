@@ -1,6 +1,7 @@
 package com.cinus.reflect;
 
 import com.cinus.array.ArrayUtils;
+import com.cinus.clazz.ClazzUtils;
 import com.cinus.thirdparty.Assert;
 
 import java.lang.reflect.Field;
@@ -152,5 +153,24 @@ public class ReflectUtils {
             }
         }
         return foundMethods.toArray(new Method[foundMethods.size()]);
+    }
+
+
+    public static <T> T newInstance(String className, Object... args) {
+        Assert.notNull(className, "[Assertion failed] - className is required; it must not be null");
+        return newInstance((Class<T>) ClazzUtils.getClassFromName(className), args);
+    }
+
+    public static <T> T newInstance(Class<T> clazz, Object... args) {
+        Assert.notNull(clazz, "[Assertion failed] - class is required; it must not be null");
+        Class<?>[] types = new Class[args.length];
+        for (int i = 0; i < args.length; ++i) {
+            types[i] = args[i].getClass();
+        }
+        try {
+            return clazz.getConstructor(types).newInstance(args);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error creating new instance of " + clazz, e);
+        }
     }
 }

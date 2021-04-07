@@ -2,8 +2,8 @@ package com.cinus.exception;
 
 public class UtilException extends RuntimeException {
 
-    public UtilException(Throwable throwable) {
-        super(throwable);
+    public UtilException(Throwable cause) {
+        super(cause);
     }
 
     public UtilException(String message) {

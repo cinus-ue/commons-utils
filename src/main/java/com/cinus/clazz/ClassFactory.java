@@ -8,7 +8,7 @@ public class ClassFactory<T> {
 
     private Class<T> clazz;
     private Class<?>[] types;
-    private Object[] params;
+    private Object[] args;
 
     public ClassFactory() {
     }
@@ -27,28 +27,25 @@ public class ClassFactory<T> {
         return this;
     }
 
-    public ClassFactory<T> params(Object... params) {
-        this.params = params;
+    public ClassFactory<T> params(Object... args) {
+        this.args = args;
         return this;
     }
 
     public T newInstance() {
         Assert.notNull(clazz, "[Assertion failed] - clazz is required; it must not be null");
         try {
-            if (ArrayUtils.isEmpty(params)) {
-                return clazz.newInstance();
-            }
+            if (ArrayUtils.isEmpty(args)) return clazz.newInstance();
             if (ArrayUtils.isEmpty(types)) {
-                types = new Class[params.length];
-                for (int i = 0; i < params.length; i++) {
-                    types[i] = params[i].getClass();
+                types = new Class[args.length];
+                for (int i = 0; i < args.length; i++) {
+                    types[i] = args[i].getClass();
                 }
             }
-            return clazz.getConstructor(types).newInstance(params);
-        } catch (Throwable t) {
-            ExceptionUtils.throwUtilException(t);
+            return clazz.getConstructor(types).newInstance(args);
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
         }
-        return null;
     }
 
 }

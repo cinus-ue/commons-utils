@@ -70,7 +70,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(context.getCookieStore());
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -91,7 +91,7 @@ public class HttpUtils {
             content = EntityUtils.toString(entity, charset);
             getCookiesFromCookieStore(context.getCookieStore());
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -119,7 +119,7 @@ public class HttpUtils {
                 getCookiesFromCookieStore(context.getCookieStore());
             }
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -147,7 +147,7 @@ public class HttpUtils {
                 getCookiesFromCookieStore(context.getCookieStore());
             }
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -171,7 +171,7 @@ public class HttpUtils {
                 getCookiesFromCookieStore(context.getCookieStore());
             }
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -195,7 +195,7 @@ public class HttpUtils {
                 getCookiesFromCookieStore(context.getCookieStore());
             }
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
         return content;
     }
@@ -229,7 +229,7 @@ public class HttpUtils {
                         new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build(), (s, sslContextL) -> true);
                 insecureHttpClient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).build();
             } catch (GeneralSecurityException e) {
-                ExceptionUtils.throwUtilException(e);
+                throw ExceptionUtils.utilException(e);
             }
         }
         return insecureHttpClient;

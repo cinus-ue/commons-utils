@@ -17,8 +17,7 @@ public class RuleRunner {
     public RuleRunner() {
     }
 
-    public void runRules(String[] rules,
-                         Object[] facts) {
+    public void runRules(String[] rules, Object[] facts) {
 
         InternalKnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();

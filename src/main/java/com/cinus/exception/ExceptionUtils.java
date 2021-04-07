@@ -27,16 +27,16 @@ public class ExceptionUtils {
     }
 
 
-    public static void throwUtilException(String message, Throwable cause) {
-        throw new UtilException(message, cause);
+    public static UtilException utilException(String message, Throwable cause) {
+        return new UtilException(message, cause);
     }
 
-    public static void throwUtilException(Throwable cause) {
-        throw new UtilException(cause);
+    public static UtilException utilException(Throwable cause) {
+        return new UtilException(cause);
     }
 
-    public static void throwUtilException(String message) {
-        throw new UtilException(message);
+    public static UtilException utilException(String message) {
+        return new UtilException(message);
     }
 
     public static String getStackTraceAsString(Exception e) {

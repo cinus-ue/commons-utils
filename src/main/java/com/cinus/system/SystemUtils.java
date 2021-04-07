@@ -8,7 +8,6 @@ import java.io.File;
 
 public class SystemUtils {
 
-
     public final static String JAVA_SPECIFICATION_NAME = "java.specification.name";
     public final static String JAVA_VERSION = "java.version";
     public final static String JAVA_SPECIFICATION_VERSION = "java.specification.version";

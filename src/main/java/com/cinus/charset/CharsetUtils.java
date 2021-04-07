@@ -65,8 +65,7 @@ public class CharsetUtils {
         try {
             return str.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            ExceptionUtils.throwUtilException(String.format("Charset [%s] unsupported!", charset));
+            throw ExceptionUtils.utilException(String.format("Charset [%s] unsupported!", charset), e);
         }
-        return null;
     }
 }

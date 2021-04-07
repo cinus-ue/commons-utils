@@ -33,9 +33,8 @@ public class DigestUtils extends com.cinus.thirdparty.digest.DigestUtils {
             byte[] digest = md.digest();
             return Hex.encodeHexString(digest);
         } catch (Exception e) {
-            ExceptionUtils.throwUtilException(e);
+            throw ExceptionUtils.utilException(e);
         }
-        return null;
     }
 
 }
