@@ -31,26 +31,31 @@ import java.util.Map;
 
 public class HttpUtils {
 
-    private static int timeout = 20000;
-    private static Map<String, String> cookieMap = new HashMap<>();
-    private static String charset = "UTF-8";
-    private static CloseableHttpClient httpClient;
-    private static CloseableHttpClient insecureHttpClient;
+    private int timeout = 20000;
+    private Map<String, String> cookieMap = new HashMap<>();
+    private String charset = "UTF-8";
+    private CloseableHttpClient httpClient;
+    private CloseableHttpClient insecureHttpClient;
 
+    public static HttpUtils create() {
+        return new HttpUtils();
+    }
 
-    public static void invalidCookies() {
+    public void invalidCookies() {
         cookieMap.clear();
     }
 
-    public static void setTimeout(int timeout) {
-        HttpUtils.timeout = timeout;
+    public HttpUtils setTimeout(int timeout) {
+        this.timeout = timeout;
+        return this;
     }
 
-    public static void setCharset(String charset) {
-        HttpUtils.charset = charset;
+    public HttpUtils setCharset(String charset) {
+        this.charset = charset;
+        return this;
     }
 
-    public static String executeGet(String url) {
+    public String executeGet(String url) {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Cookie", convertCookieMapToString(cookieMap));
         httpGet.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
@@ -71,13 +76,13 @@ public class HttpUtils {
     }
 
 
-    public static String executeInsecureGet(String url) {
+    public String executeInsecureGet(String url) {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Cookie", convertCookieMapToString(cookieMap));
         httpGet.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
         String content = Constants.EMPTY;
         HttpClientContext context = HttpClientContext.create();
-        try (CloseableHttpResponse response = getSSLInsecureClient().execute(httpGet, context)) {
+        try (CloseableHttpResponse response = getInsecureHttpClient().execute(httpGet, context)) {
             int code = response.getStatusLine().getStatusCode();
             if (code != HttpStatus.SC_OK) {
                 return content;
@@ -92,7 +97,7 @@ public class HttpUtils {
     }
 
 
-    public static String executePost(String url, Map<String, String> params) {
+    public String executePost(String url, Map<String, String> params) {
         String content = Constants.EMPTY;
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
@@ -120,7 +125,7 @@ public class HttpUtils {
     }
 
 
-    public static String executeInsecurePost(String url, Map<String, String> params) {
+    public String executeInsecurePost(String url, Map<String, String> params) {
         String content = Constants.EMPTY;
         HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> parameters = new ArrayList<>();
@@ -132,7 +137,7 @@ public class HttpUtils {
         HttpClientContext context = HttpClientContext.create();
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(parameters));
-            try (CloseableHttpResponse response = getSSLInsecureClient().execute(httpPost, context)) {
+            try (CloseableHttpResponse response = getInsecureHttpClient().execute(httpPost, context)) {
                 int code = response.getStatusLine().getStatusCode();
                 if (code != HttpStatus.SC_OK) {
                     return content;
@@ -148,7 +153,7 @@ public class HttpUtils {
     }
 
 
-    public static String executePost(String url, String jsonBody) {
+    public String executePost(String url, String jsonBody) {
         String content = Constants.EMPTY;
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
@@ -172,7 +177,7 @@ public class HttpUtils {
     }
 
 
-    public static String executeInsecurePost(String url, String jsonBody) {
+    public String executeInsecurePost(String url, String jsonBody) {
         String content = Constants.EMPTY;
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Cookie", convertCookieMapToString(cookieMap));
@@ -180,7 +185,7 @@ public class HttpUtils {
         HttpClientContext context = HttpClientContext.create();
         try {
             httpPost.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
-            try (CloseableHttpResponse response = getSSLInsecureClient().execute(httpPost, context)) {
+            try (CloseableHttpResponse response = getInsecureHttpClient().execute(httpPost, context)) {
                 int code = response.getStatusLine().getStatusCode();
                 if (code != HttpStatus.SC_OK) {
                     return content;
@@ -196,7 +201,7 @@ public class HttpUtils {
     }
 
 
-    private static void getCookiesFromCookieStore(CookieStore cookieStore) {
+    private void getCookiesFromCookieStore(CookieStore cookieStore) {
         List<Cookie> cookies = cookieStore.getCookies();
         for (Cookie cookie : cookies) {
             cookieMap.put(cookie.getName(), cookie.getValue());
@@ -215,7 +220,7 @@ public class HttpUtils {
     }
 
 
-    private static CloseableHttpClient getSSLInsecureClient() {
+    private CloseableHttpClient getInsecureHttpClient() {
         if (insecureHttpClient != null) {
             return insecureHttpClient;
         } else {
@@ -230,7 +235,7 @@ public class HttpUtils {
         return insecureHttpClient;
     }
 
-    private static CloseableHttpClient getHttpClient() {
+    private CloseableHttpClient getHttpClient() {
         if (httpClient != null) {
             return httpClient;
         } else {

@@ -9,8 +9,8 @@
 //
 //    @Test
 //    public void test_get() {
-//        HttpUtils.setTimeout(8000);
-//        String response = HttpUtils.executeGet("https://www.baidu.com");
+//        HttpUtils httpUtils = HttpUtils.create().setTimeout(8000);
+//        String response = httpUtils.executeGet("https://www.baidu.com");
 //        Assert.assertTrue(!StringUtils.isEmpty(response));
 //    }
 //}
