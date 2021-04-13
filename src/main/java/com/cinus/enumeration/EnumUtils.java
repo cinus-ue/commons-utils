@@ -6,9 +6,8 @@ import java.util.*;
 
 public class EnumUtils {
 
-
     public static <E extends Enum<E>> Map<String, E> getEnumMap(Class<E> enumClass) {
-        Map<String, E> map = new LinkedHashMap();
+        Map<String, E> map = new LinkedHashMap<>();
         E[] arr = enumClass.getEnumConstants();
         for (int i = 0; i < arr.length; ++i) {
             E e = arr[i];
@@ -19,7 +18,7 @@ public class EnumUtils {
 
 
     public static <E extends Enum<E>> List<E> getEnumList(Class<E> enumClass) {
-        return new ArrayList(Arrays.asList(enumClass.getEnumConstants()));
+        return Arrays.asList(enumClass.getEnumConstants());
     }
 
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, String enumName) {
