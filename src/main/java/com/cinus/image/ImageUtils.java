@@ -31,7 +31,7 @@ public class ImageUtils {
         for (int i = 0; i < _image.getWidth(); i++) {
             for (int j = 0; j < _image.getHeight(); j++) {
                 int rgb;
-                int p = RGB.getRGBW(_image, i, j);
+                int p = getRGBW(_image, i, j);
 
                 rgb = (int) ((((p >> 16) & 0xFF) * 0.2125) + (((p >> 8) & 0xFF) * 0.7154) + ((p & 0xFF) * 0.0721));
                 rgb = (rgb << 16) | (rgb << 8) | (rgb);
@@ -68,7 +68,7 @@ public class ImageUtils {
         for (int i = -_r; i < _r; i++) {
             for (int j = -_r; j < _r; j++) {
                 if (i * i + j * j < radiusPow) {
-                    int c = RGB.getRGBW(_image, _w + i, _h + j);
+                    int c = getRGBW(_image, _w + i, _h + j);
                     maxR = Math.max(maxR, (c >> 16) & 0xFF);
                     maxG = Math.max(maxG, (c >> 8) & 0xFF);
                     maxB = Math.max(maxB, c & 0xFF);
@@ -76,6 +76,15 @@ public class ImageUtils {
             }
         }
         return (maxR << 16) | (maxG << 8) | maxB;
+    }
+
+
+    public static int getRGBW(BufferedImage image, int i, int j) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        i = Math.max(0, Math.min(width - 1, i));
+        j = Math.max(0, Math.min(height - 1, j));
+        return image.getRGB(i, j);
     }
 
     public static BufferedImage copyImage(BufferedImage _image) {

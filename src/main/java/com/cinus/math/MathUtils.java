@@ -173,7 +173,6 @@ public class MathUtils {
             if (values[0] == null) {
                 throw new IllegalArgumentException("Cannot passed null BigDecimal entry to maximum()");
             }
-
             return values[0];
         }
         BigDecimal current = values[0];
@@ -184,6 +183,51 @@ public class MathUtils {
             current = values[i].max(current);
         }
         return current;
+    }
+
+    public static String formatToString(String number, String format) {
+        return formatToString(new BigDecimal(number), format);
+    }
+
+    public static String formatToString(BigDecimal bd, String format) {
+        return new DecimalFormat(format).format(bd);
+    }
+
+    public int compare(String n1, String n2) {
+        return new BigDecimal(n1).compareTo(new BigDecimal(n2));
+    }
+
+    public static BigDecimal nvl(BigDecimal bd) {
+        return null == bd ? new BigDecimal("0") : bd;
+    }
+
+    public static Double nvl(Double d) {
+        return null == d ? new Double("0") : d;
+    }
+
+    public static String nvl(String s) {
+        return null == s ? "0" : s;
+    }
+
+
+    public static BigDecimal add(BigDecimal bd1, BigDecimal bd2) {
+        return nvl(bd1).add(nvl(bd2));
+    }
+
+    public static String add(String n1, String n2) {
+        BigDecimal b1 = new BigDecimal(nvl(n1));
+        BigDecimal b2 = new BigDecimal(nvl(n2));
+        return b1.add(b2).toString();
+    }
+
+    public static double sub(String n1, String n2) {
+        BigDecimal b1 = new BigDecimal(nvl(n1));
+        BigDecimal b2 = new BigDecimal(nvl(n2));
+        return b1.subtract(b2).doubleValue();
+    }
+
+    public static BigDecimal sub(BigDecimal bd1, BigDecimal bd2) {
+        return nvl(bd1).subtract(nvl(bd2));
     }
 
 
@@ -216,39 +260,12 @@ public class MathUtils {
         return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
-    public static String formatToString(String number, String format) {
-        return formatToString(new BigDecimal(number), format);
+    public static double round(double v, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b = new BigDecimal(Double.toString(v));
+        BigDecimal one = new BigDecimal("1");
+        return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
-
-    public static String formatToString(BigDecimal bd, String format) {
-        return new DecimalFormat(format).format(bd);
-    }
-
-    public int compare(String n1, String n2) {
-        return new BigDecimal(n1).compareTo(new BigDecimal(n2));
-    }
-
-    public static BigDecimal nvl(BigDecimal bd) {
-        return null == bd ? new BigDecimal("0") : bd;
-    }
-
-    public static Double nvl(Double d) {
-        return null == d ? new Double("0") : d;
-    }
-
-    public static BigDecimal add(BigDecimal bd1, BigDecimal bd2) {
-        return nvl(bd1).add(nvl(bd2));
-    }
-
-    public static String add(String bd1, String bd2) {
-        BigDecimal b1 = new BigDecimal(bd1);
-        BigDecimal b2 = new BigDecimal(bd2);
-        return nvl(b1).add(nvl(b2)).toString();
-    }
-
-    public static BigDecimal subtract(BigDecimal bd1, BigDecimal bd2) {
-        return nvl(bd1).subtract(nvl(bd2));
-    }
-
-
 }
