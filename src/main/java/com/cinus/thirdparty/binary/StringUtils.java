@@ -272,6 +272,15 @@ public class StringUtils {
         return null == charset ? str.getBytes() : str.getBytes(charset);
     }
 
+    public static boolean equals(CharSequence cs1, CharSequence cs2) {
+        if (cs1 == cs2) {
+            return true;
+        } else if (cs1 != null && cs2 != null) {
+            return cs1 instanceof String && cs2 instanceof String ? cs1.equals(cs2) : CharSequenceUtils.regionMatches(cs1, false, 0, cs2, 0, Math.max(cs1.length(), cs2.length()));
+        } else {
+            return false;
+        }
+    }
 
 }
 
