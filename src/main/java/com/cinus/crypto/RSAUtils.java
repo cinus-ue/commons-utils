@@ -1,14 +1,11 @@
 package com.cinus.crypto;
 
 
-import com.cinus.thirdparty.DecoderException;
+import com.cinus.exception.ExceptionUtils;
 import com.cinus.thirdparty.binary.Base64;
 import com.cinus.thirdparty.binary.Hex;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +14,6 @@ import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -40,69 +36,98 @@ public class RSAUtils {
 
     }
 
-    public static String encrypt(String data, PublicKey publicKey) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance(RSA_MODE);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return Hex.encodeHexString(cipher.doFinal(data.getBytes()));
+    public static String encrypt(String data, PublicKey publicKey) {
+        try {
+            Cipher cipher = Cipher.getInstance(RSA_MODE);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            return Hex.encodeHexString(cipher.doFinal(data.getBytes()));
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
+
     }
 
-    public static byte[] encrypt(byte[] data, PublicKey publicKey) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance(RSA_MODE);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return cipher.doFinal(data);
+    public static byte[] encrypt(byte[] data, PublicKey publicKey) {
+        try {
+            Cipher cipher = Cipher.getInstance(RSA_MODE);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            return cipher.doFinal(data);
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
     }
 
-    public static String decrypt(String data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, DecoderException {
-        byte[] buf = Hex.decodeHex(data.toCharArray());
-        Cipher cipher = Cipher.getInstance(RSA_MODE);
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return new String(cipher.doFinal(buf));
+    public static String decrypt(String data, PrivateKey privateKey) {
+        try {
+            byte[] buf = Hex.decodeHex(data.toCharArray());
+            Cipher cipher = Cipher.getInstance(RSA_MODE);
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            return new String(cipher.doFinal(buf));
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
     }
 
-    public static byte[] decrypt(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance(RSA_MODE);
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return cipher.doFinal(data);
-    }
-
-
-    public static PublicKey getPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PublicKey publicKey = keyFactory.generatePublic(keySpec);
-        return publicKey;
-    }
-
-
-    public static PrivateKey getPrivateKey(byte[] keyBytes) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        return privateKey;
-    }
-
-
-    public static PublicKey getPublicKey(String modulus, String publicExponent)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        BigInteger bigIntModulus = new BigInteger(modulus);
-        BigInteger bigIntPrivateExponent = new BigInteger(publicExponent);
-        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PublicKey publicKey = keyFactory.generatePublic(keySpec);
-        return publicKey;
+    public static byte[] decrypt(byte[] data, PrivateKey privateKey) {
+        try {
+            Cipher cipher = Cipher.getInstance(RSA_MODE);
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            return cipher.doFinal(data);
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
     }
 
 
-    public static PrivateKey getPrivateKey(String modulus, String privateExponent)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        BigInteger bigIntModulus = new BigInteger(modulus);
-        BigInteger bigIntPrivateExponent = new BigInteger(privateExponent);
-        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        return privateKey;
+    public static PublicKey getPublicKey(byte[] keyBytes) {
+        try {
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);
+            return publicKey;
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
+    }
+
+
+    public static PrivateKey getPrivateKey(byte[] keyBytes) {
+        try {
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+            return privateKey;
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
+    }
+
+
+    public static PublicKey getPublicKey(String modulus, String publicExponent) {
+        try {
+            BigInteger bigIntModulus = new BigInteger(modulus);
+            BigInteger bigIntPrivateExponent = new BigInteger(publicExponent);
+            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);
+            return publicKey;
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
+    }
+
+
+    public static PrivateKey getPrivateKey(String modulus, String privateExponent) {
+        try {
+            BigInteger bigIntModulus = new BigInteger(modulus);
+            BigInteger bigIntPrivateExponent = new BigInteger(privateExponent);
+            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+            return privateKey;
+        } catch (Exception e) {
+            throw ExceptionUtils.utilException(e);
+        }
     }
 
 
