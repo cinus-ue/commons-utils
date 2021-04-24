@@ -96,8 +96,7 @@ public class LogUtils {
             if (stackIndex >= trace.length) {
                 continue;
             }
-            StackTraceElement element = trace[stackIndex];
-            return element;
+            return trace[stackIndex];
         }
 
         return null;
